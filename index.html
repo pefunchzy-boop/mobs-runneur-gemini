@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mob Runner 3D - Édition Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- UI Overlay -->
+        <div id="ui-layer">
+            <div id="top-bar">
+                <div id="level-display">Niveau 1</div>
+                <div id="coins-display">💰 <span id="coin-count">0</span></div>
+                <button id="admin-toggle-btn" class="btn">🛠️ Mode Admin</button>
+            </div>
+
+            <!-- Shop / Upgrades -->
+            <div id="shop-container">
+                <div class="upgrade-card" id="up-cadence">
+                    <h3>Cadence</h3>
+                    <p>Niveau <span id="lvl-cadence">1</span></p>
+                    <button class="btn upgrade-btn" onclick="game.upgrade('cadence')">Améliorer (<span id="cost-cadence">50</span>)</button>
+                </div>
+                <div class="upgrade-card" id="up-damage">
+                    <h3>Dégâts</h3>
+                    <p>Niveau <span id="lvl-damage">1</span></p>
+                    <button class="btn upgrade-btn" onclick="game.upgrade('damage')">Améliorer (<span id="cost-damage">50</span>)</button>
+                </div>
+                <div class="upgrade-card" id="up-revenue">
+                    <h3>Revenus</h3>
+                    <p>Niveau <span id="lvl-revenue">1</span></p>
+                    <button class="btn upgrade-btn" onclick="game.upgrade('revenue')">Améliorer (<span id="cost-revenue">50</span>)</button>
+                </div>
+            </div>
+
+            <!-- Start / Win / Lose Overlays -->
+            <div id="screen-overlay" class="screen">
+                <h1 id="screen-title">MOB RUNNER 3D</h1>
+                <p id="screen-subtitle">Détruis les ennemis et gravis les niveaux !</p>
+                <button id="start-btn" class="btn primary-btn" onclick="game.startLevel()">JOUER</button>
+            </div>
+        </div>
+
+        <!-- Admin Editor Panel -->
+        <div id="admin-panel" class="hidden">
+            <h2>🛠️ Panneau Admin & Créateur de Niveaux</h2>
+            <div class="admin-row">
+                <label>Sélectionner Niveau :</label>
+                <select id="admin-level-select" onchange="adminEditor.loadLevel(this.value)">
+                    <option value="0">Niveau 1</option>
+                    <option value="1">Niveau 2</option>
+                    <option value="2">Niveau 3 (Boss)</option>
+                </select>
+                <button class="btn" onclick="adminEditor.addNewLevel()">+ Nouveau Niveau</button>
+            </div>
+            <div class="admin-row">
+                <label>Ajouter Élément :</label>
+                <select id="admin-element-type">
+                    <option value="gate_mult">Porte Multipliante (x2)</option>
+                    <option value="gate_add">Porte Additionnelle (+10)</option>
+                    <option value="enemy">Groupe d'Ennemis</option>
+                    <option value="obstacle">Obstacle (Pneu/Mur)</option>
+                    <option value="boss">Boss Final</option>
+                </select>
+                <input type="number" id="admin-element-z" placeholder="Position Z" value="50">
+                <input type="text" id="admin-element-val" placeholder="Valeur (ex: 2 ou 20)" value="2">
+                <button class="btn primary-btn" onclick="adminEditor.addElement()">Ajouter</button>
+            </div>
+            <div class="admin-row">
+                <h3>Éléments du niveau actuel :</h3>
+                <div id="admin-elements-list"></div>
+            </div>
+            <div class="admin-row">
+                <button class="btn success-btn" onclick="adminEditor.saveLevels()">💾 Sauvegarder les Niveaux (JSON)</button>
+                <button class="btn" onclick="adminEditor.exportJSON()">📤 Exporter le code</button>
+                <button class="btn danger-btn" onclick="adminEditor.close()">Fermer Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
