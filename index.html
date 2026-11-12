@@ -2,86 +2,143 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mob Runner 3D - Édition Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mob Shooter 3D - Édition Pro & Admin</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div id="game-container">
-        <!-- UI Overlay -->
-        <div id="ui-layer">
+        <!-- Interface Joueur (HUD) -->
+        <div id="hud">
             <div id="top-bar">
-                <div id="level-display">Niveau 1</div>
-                <div id="coins-display">💰 <span id="coin-count">0</span></div>
-                <button id="admin-toggle-btn" class="btn">🛠️ Mode Admin</button>
-            </div>
-
-            <!-- Shop / Upgrades -->
-            <div id="shop-container">
-                <div class="upgrade-card" id="up-cadence">
-                    <h3>Cadence</h3>
-                    <p>Niveau <span id="lvl-cadence">1</span></p>
-                    <button class="btn upgrade-btn" onclick="game.upgrade('cadence')">Améliorer (<span id="cost-cadence">50</span>)</button>
+                <div class="stat-pill" id="level-pill">NIVEAU <span id="hud-level">1</span></div>
+                <div id="progress-wrapper">
+                    <div id="progress-bar"></div>
+                    <span id="progress-text">0%</span>
                 </div>
-                <div class="upgrade-card" id="up-damage">
-                    <h3>Dégâts</h3>
-                    <p>Niveau <span id="lvl-damage">1</span></p>
-                    <button class="btn upgrade-btn" onclick="game.upgrade('damage')">Améliorer (<span id="cost-damage">50</span>)</button>
-                </div>
-                <div class="upgrade-card" id="up-revenue">
-                    <h3>Revenus</h3>
-                    <p>Niveau <span id="lvl-revenue">1</span></p>
-                    <button class="btn upgrade-btn" onclick="game.upgrade('revenue')">Améliorer (<span id="cost-revenue">50</span>)</button>
-                </div>
-            </div>
-
-            <!-- Start / Win / Lose Overlays -->
-            <div id="screen-overlay" class="screen">
-                <h1 id="screen-title">MOB RUNNER 3D</h1>
-                <p id="screen-subtitle">Détruis les ennemis et gravis les niveaux !</p>
-                <button id="start-btn" class="btn primary-btn" onclick="game.startLevel()">JOUER</button>
+                <div class="stat-pill gold-pill">💰 <span id="hud-coins">0</span></div>
+                <button id="btn-open-admin" class="icon-btn" title="Mode Admin">🛠️</button>
             </div>
         </div>
 
-        <!-- Admin Editor Panel -->
-        <div id="admin-panel" class="hidden">
-            <h2>🛠️ Panneau Admin & Créateur de Niveaux</h2>
-            <div class="admin-row">
-                <label>Sélectionner Niveau :</label>
-                <select id="admin-level-select" onchange="adminEditor.loadLevel(this.value)">
-                    <option value="0">Niveau 1</option>
-                    <option value="1">Niveau 2</option>
-                    <option value="2">Niveau 3 (Boss)</option>
-                </select>
-                <button class="btn" onclick="adminEditor.addNewLevel()">+ Nouveau Niveau</button>
+        <!-- Menu Principal / Boutique avant le départ -->
+        <div id="lobby-screen" class="overlay-screen">
+            <div class="logo-box">
+                <h1>MOB SHOOTER 3D</h1>
+                <p>Tire sur les portails pour agrandir ton armée !</p>
             </div>
-            <div class="admin-row">
-                <label>Ajouter Élément :</label>
-                <select id="admin-element-type">
-                    <option value="gate_mult">Porte Multipliante (x2)</option>
-                    <option value="gate_add">Porte Additionnelle (+10)</option>
-                    <option value="enemy">Groupe d'Ennemis</option>
-                    <option value="obstacle">Obstacle (Pneu/Mur)</option>
-                    <option value="boss">Boss Final</option>
-                </select>
-                <input type="number" id="admin-element-z" placeholder="Position Z" value="50">
-                <input type="text" id="admin-element-val" placeholder="Valeur (ex: 2 ou 20)" value="2">
-                <button class="btn primary-btn" onclick="adminEditor.addElement()">Ajouter</button>
+
+            <div class="shop-grid">
+                <div class="shop-card" onclick="game.buyUpgrade('fireRate')">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">CADENCE</div>
+                    <div class="card-lvl">Niv. <span id="lvl-fireRate">1</span></div>
+                    <div class="card-price">💰 <span id="cost-fireRate">100</span></div>
+                </div>
+                <div class="shop-card" onclick="game.buyUpgrade('damage')">
+                    <div class="card-icon">🔥</div>
+                    <div class="card-title">DÉGÂTS</div>
+                    <div class="card-lvl">Niv. <span id="lvl-damage">1</span></div>
+                    <div class="card-price">💰 <span id="cost-damage">100</span></div>
+                </div>
+                <div class="shop-card" onclick="game.buyUpgrade('income')">
+                    <div class="card-icon">💎</div>
+                    <div class="card-title">REVENUS</div>
+                    <div class="card-lvl">Niv. <span id="lvl-income">1</span></div>
+                    <div class="card-price">💰 <span id="cost-income">100</span></div>
+                </div>
             </div>
-            <div class="admin-row">
-                <h3>Éléments du niveau actuel :</h3>
-                <div id="admin-elements-list"></div>
+
+            <button id="btn-play" class="play-btn" onclick="game.startLevel()">JOUER</button>
+        </div>
+
+        <!-- Écran de Fin de Niveau -->
+        <div id="end-screen" class="overlay-screen hidden">
+            <div class="end-box">
+                <h2 id="end-title">VICTOIRE !</h2>
+                <div class="reward-display">💰 +<span id="end-reward">0</span></div>
+                <button class="play-btn" onclick="game.nextLevel()">CONTINUER</button>
             </div>
-            <div class="admin-row">
-                <button class="btn success-btn" onclick="adminEditor.saveLevels()">💾 Sauvegarder les Niveaux (JSON)</button>
-                <button class="btn" onclick="adminEditor.exportJSON()">📤 Exporter le code</button>
-                <button class="btn danger-btn" onclick="adminEditor.close()">Fermer Admin</button>
+        </div>
+
+        <!-- Panneau Admin / Éditeur de Niveaux -->
+        <div id="admin-modal" class="hidden">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>🛠️ Éditeur de Niveaux & Cheats</h2>
+                    <button class="close-btn" onclick="admin.close()">✖</button>
+                </div>
+
+                <!-- Section Cheats Rapides -->
+                <div class="admin-section">
+                    <h3>⚡ Cheats Rapides</h3>
+                    <div class="btn-group">
+                        <button class="adm-btn" onclick="admin.addCoins(10000)">+10 000 💰</button>
+                        <button class="adm-btn" onclick="admin.spawnSoldiers(20)">+20 Soldats</button>
+                        <button class="adm-btn" onclick="admin.toggleGodMode()">God Mode: <span id="god-status">OFF</span></button>
+                    </div>
+                </div>
+
+                <!-- Sélection / Création de Niveau -->
+                <div class="admin-section">
+                    <h3>🗺️ Gestion des Niveaux</h3>
+                    <div class="row">
+                        <select id="admin-level-select" onchange="admin.selectLevel(this.value)"></select>
+                        <button class="adm-btn primary" onclick="admin.createNewLevel()">+ Nouveau Niveau</button>
+                        <button class="adm-btn danger" onclick="admin.deleteCurrentLevel()">Supprimer</button>
+                    </div>
+                    <div class="row">
+                        <label>Longueur du niveau :</label>
+                        <input type="number" id="admin-lvl-length" value="200" min="100" max="1000" step="20">
+                        <button class="adm-btn" onclick="admin.updateLevelProps()">Appliquer</button>
+                    </div>
+                </div>
+
+                <!-- Ajout d'éléments sur la route -->
+                <div class="admin-section">
+                    <h3>➕ Ajouter un Élément</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>Type :</label>
+                            <select id="el-type">
+                                <option value="gate">Portail (Tir pour améliorer)</option>
+                                <option value="enemies">Groupe d'Ennemis</option>
+                                <option value="tires">Pile de Pneus (Obstacle)</option>
+                                <option value="boss">Boss Géant</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Position Z (Distance) :</label>
+                            <input type="number" id="el-z" value="50" min="15" max="950">
+                        </div>
+                        <div>
+                            <label>Position X (-4 à +4) :</label>
+                            <input type="number" id="el-x" value="0" min="-4" max="4" step="0.5">
+                        </div>
+                        <div>
+                            <label>Valeur / PV / Nombre :</label>
+                            <input type="number" id="el-val" value="-10">
+                        </div>
+                    </div>
+                    <button class="adm-btn success full-width" onclick="admin.addElement()">Ajouter au Niveau</button>
+                </div>
+
+                <!-- Liste des éléments du niveau -->
+                <div class="admin-section">
+                    <h3>📋 Éléments du Niveau (<span id="el-count">0</span>)</h3>
+                    <div id="admin-el-list" class="el-list"></div>
+                </div>
+
+                <div class="admin-footer">
+                    <button class="adm-btn success" onclick="admin.saveAndReload()">💾 Sauvegarder & Tester</button>
+                    <button class="adm-btn" onclick="admin.resetDefaults()">🔄 Réinitialiser par défaut</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="textures.js"></script>
     <script src="game.js"></script>
 </body>
 </html>

@@ -1,17 +1,11 @@
-# Mob Runner 3D - Édition Admin
+# Mob Shooter 3D - Édition Pro & Admin
 
-Jeu 3D inspiré des jeux de type "Mob Control / Runner", entièrement développé en HTML5 / JavaScript avec Three.js.
+Jeu d'arcade 3D complet inspiré de la vidéo, développé en JavaScript pur avec Three.js et un générateur de textures procédurales.
 
-## Fonctionnalités incluses :
-- **Graphismes 3D fluides** avec Three.js (personnages, portes, obstacles, ennemis, boss).
-- **Mode Admin / Créateur de Niveaux intégré** : Modifiez les niveaux existants, ajoutez des portes, des ennemis, des obstacles et des boss, ou créez de nouveaux niveaux directement depuis l'interface du jeu.
-- **Boutique d'améliorations** (Cadence, Dégâts, Revenus).
-- **Sauvegarde localStorage** pour vos niveaux personnalisés et pièces.
-- **100% compatible GitHub Pages** : Aucun serveur requis, fonctionne instantanément après dézippage.
-
-## Déploiement sur GitHub Pages :
-1. Décompressez ce fichier zip dans un dossier.
-2. Créez un dépôt sur GitHub (ex: `mob-runner`).
-3. Uploadez tous les fichiers (`index.html`, `style.css`, `game.js`, `README.md`) à la racine du dépôt.
-4. Allez dans les paramètres du dépôt -> **Pages** -> Source : `main` branch / `root`.
-5. Votre jeu est en ligne !
+## Nouveautés de cette version :
+- **Vraie mécanique de tir sur les portails** : Tire sur les portails rouges (ex: `-25`) pour les faire monter en positif (`+10`, `+20`...) avant de les traverser !
+- **Textures procédurales HD** : Route asphaltée fissurée avec marquages au sol, portails dégradés avec chevrons, pneus crantés texturés, bâtiments urbains et ombres portées dynamiques.
+- **Mode Admin complet (`🛠️`)** :
+  - Cheats instantanés (`+10 000 pièces`, `+20 soldats`, `God Mode`).
+  - Éditeur de niveaux visuel : place des portails, hordes d'ennemis, piles de pneus ou boss géants aux coordonnées X/Z de ton choix, crée de nouveaux niveaux et teste-les en un clic.
+- **Prêt pour GitHub Pages** : Dézippe et dépose directement les fichiers sur ton dépôt GitHub.
